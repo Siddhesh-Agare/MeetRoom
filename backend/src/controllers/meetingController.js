@@ -10,6 +10,8 @@ export const createMeetingId = (req,res)=>{
         }
 
         
+
+        
         const meetingId = Math.random().toString(36).substring(2, 10);
 
          res.status(201).json({
