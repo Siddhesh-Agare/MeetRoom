@@ -28,6 +28,18 @@ const io = new Server(server,{
 io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
 
+    socket.on("join-meeting",({ meetingId, name })=>{
+        console.log(`${name} wants to join meeting: ${meetingId}`);
+
+        socket.join(meetingId);
+
+        socket.to(meetingId).emit("user-joined",{
+            name,
+            socketId: socket.id
+        })
+        
+    })
+
     socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
     });

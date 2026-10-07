@@ -10,6 +10,11 @@ const MeetingRoom = () => {
   useEffect(()=>{
     const socket = io("http://localhost:5000");
 
+    socket.emit("join-meeting",{
+      meetingId,
+      name
+    })
+
     return () =>{
       socket.disconnect();
     };
