@@ -3,6 +3,7 @@ import cors from 'cors'
 import { Server } from 'socket.io'
 import http from 'http'
 import meetingRouter from './src/Routes/meetingRoutes.js';
+import { log } from 'console';
 
 const app = express();
 const server = http.createServer(app);
@@ -37,11 +38,19 @@ io.on("connection", (socket) => {
             name,
             socketId: socket.id
         })
+
+        socket.meetingId = meetingId;
         
     })
 
     socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
+        const meetingId = socket.meetingId;
+        console.log("User left meeting:", meetingId);
+
+        socket.to(meetingId).emit("user-left", {
+            socketId: socket.id
+        });
+        
     });
 });
 

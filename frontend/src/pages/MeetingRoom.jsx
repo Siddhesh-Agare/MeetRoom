@@ -15,6 +15,15 @@ const MeetingRoom = () => {
       name
     })
 
+    socket.on("user-joined",(user)=>{
+      console.log("New user joined:", user);
+      
+    })
+
+    socket.on("user-left", (user) => {
+      console.log("User left:", user);
+    });
+
     return () =>{
       socket.disconnect();
     };
