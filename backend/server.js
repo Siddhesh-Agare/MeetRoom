@@ -32,6 +32,28 @@ io.on("connection", (socket) => {
     socket.on("join-meeting",({ meetingId, name })=>{
         console.log(`${name} wants to join meeting: ${meetingId}`);
 
+        socket.meetingId = meetingId;
+        socket.userName = name;
+
+        const room = io.sockets.adapter.rooms.get(meetingId);
+
+        const existingParticipants = [];
+
+        if(room){
+            room.forEach((socketId)=>{
+                const participantSocket = io.sockets.sockets.get(socketId);
+
+                if(participantSocket){
+                    existingParticipants.push({
+                        name : participantSocket.userName,
+                        socketId: socketId
+                    });
+                }
+            });
+        }
+
+        socket.emit("existing-participants",existingParticipants);
+
         socket.join(meetingId);
 
         socket.to(meetingId).emit("user-joined",{
